@@ -1,7 +1,12 @@
 const authorModel = require("../Model/authorModel");
 const jwt = require('jsonwebtoken')
 
-
+const isValidInput = function(input){
+    if(Object.keys(input).length == 0)   return false
+    else{
+        return true
+    }
+}  
 
 // Regex for Email Validation--
 const validateEmail = function (email) {
@@ -17,8 +22,8 @@ const createAuthor = async (req, res) => {
     try {
         let data = req.body;
 
-        if (Object.keys(data).length == 0) {
-            return res.status(400).send({ status: false, msg: " Date is require for Author Data Creation" });
+        if (!isValidInput(req.body)){
+            return res.status(400).send({ status: false, msg: " Enter Valid Input" });
         }
 
         let validFname = /^[A-Za-z][A-Za-z-\s ][^\s-]+$/
@@ -73,7 +78,9 @@ const createAuthor = async (req, res) => {
 
 const authorLogin = async function (req, res) {
     try {
-
+        if (!isValidInput(req.body)){
+            return res.status(400).send({ status: false, msg: " Enter Valid Input" });
+        }
         let { email, password } = req.body
         if (!email)
             return res.status(400).send({ status: false, message: "EmailId is mandatory" })
@@ -102,7 +109,8 @@ const authorLogin = async function (req, res) {
 
 
 module.exports.createAuthor = createAuthor
-module.exports.authorLogin = authorLogin;
+module.exports.authorLogin = authorLogin
+module.exports.isValidInput = isValidInput
 
 
 

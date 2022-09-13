@@ -1,6 +1,7 @@
 const authorModel = require("../Model/authorModel");
 const blogModel = require("../Model/blogsModel");
 const mongoose = require('mongoose');
+const  { isValidInput} = require('./authorController')
 
 
 
@@ -15,7 +16,7 @@ const verify = function (Id) {
 
 const isValid = function (value) {
   if (typeof value == undefined || value == null) return false
-  if (value.trim().length == 0) return false
+  if (value.trim().length == 0) return false   
   else if (typeof value == "string") return true
 }
 
@@ -26,9 +27,9 @@ const createBlog = async (req, res) => {
   try {
     let data = req.body;
 
-    if (Object.keys(data).length == 0) {
-      return res.status(400).send({ status: false, msg: "Data is required for Blog Creation" });
-    }
+    if (!isValidInput(req.body)){
+      return res.status(400).send({ status: false, msg: " Enter Valid Input" });
+  }
     if (!data.title)
       return res.status(400).send({ status: false, msg: "Please Enter Book Title" });
     if (!data.body)
@@ -119,12 +120,14 @@ const getBlogs = async (req, res) => {
 //===================================  PUT UPDATE BLOGs ======================================
 const updateBlogs = async (req, res) => {
   try {
+
+    if (!isValidInput(req.body)){
+      return res.status(400).send({ status: false, msg: " Enter Valid Input" });
+  }
     let alldata = req.body
     let blogId = req.params.blogId
 
-    if (Object.keys(alldata).length == 0)
-      return res.status(400).send({ status: false, msg: "Please Enter Blog Details For Updating" })
-
+    
     if (!blogId)
       return res.status(400).send({ status: false, msg: "Blog Id is required" })
 
@@ -176,8 +179,9 @@ const deleteByParams = async function (req, res) {
 
 const deleteByQueryParams = async function (req, res) {
   try {
-    if (Object.keys(req.query).length == 0) return res.status(400).send({ status: false, msg: "Send atleast one Query for delete blog " })
-
+    if (!isValidInput(req.query)){
+      return res.status(400).send({ status: false, msg: " Enter Valid Input" });
+  }
     let { category, authorId, tags, subcategory, isPublished } = req.query
     let filter = { isDeleted: false }
 

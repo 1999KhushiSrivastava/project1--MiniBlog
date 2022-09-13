@@ -15,7 +15,7 @@ const authenticate = async function (req, res, next) {
             if (err) {
                 return res.status(401).send({ status: false, msg: "Error : Invalid Token or Expired Token" })
             } 
-            req.token = decode
+            req.token = decode  
 
             next();
         });
@@ -39,11 +39,11 @@ const authorise = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "BlogId is Invalid.. Please Enter Correct Id" });
 
         let findBlog = await blogModel.findById(blogId);
-        if (!findBlog)
+        if (!findBlog)  //null=> !false // data=> !true => false //=> {} => true
             return res.status(404).send({ status: false, msg: "No Such Blog Available." })
 
         if (findBlog.authorId.toString() !== userLoggedIn)
-            return res.status(403).send({ status: false, msg: "Unauthorized Author, You can't change / Delelte to ohters Blog" })
+            return res.status(403).send({ status: false, msg: "Unauthorized Author, You can't change / Delelte to others Blog" })
 
         next();
 
@@ -61,3 +61,7 @@ const authorise = async function (req, res, next) {
 
 module.exports.authenticate = authenticate;
 module.exports.authorise = authorise;
+
+
+
+
